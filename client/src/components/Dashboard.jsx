@@ -1,21 +1,35 @@
 import { useNavigate } from 'react-router';
 import { PlusIcon } from "@heroicons/react/20/solid";
-// import GoalModal from "./CourseModal";
+import CourseModal from "./CourseModal";
 import Sidebar from "./Sidebar";
 import { useEffect, useState } from 'react';
 import { useUserInfo } from '../hooks/useUserInfo';
+import useFirebaseConfig from '../hooks/useFirebaseConfig';
+import { getCourses } from '../firebase';
 
 
 const Dashboard = () => {
     const [isLoadingUser, setIsLoadingUser] = useState(true);
     const navigate = useNavigate();
-    const { role } = useUserInfo();
+    const { db } = useFirebaseConfig()
+    const { uid, role } = useUserInfo()
+    const [courses, setCourses] = useState([]);
     
+    const fetchCourses = async (uid, db) => {
+        const data = await getCourses(uid, db);
+        setCourses(data);
+    }
+
     useEffect(() => {
         if(role) {
             setIsLoadingUser(false);
         }
-    }, [role])
+
+        if(db !== null) {
+            fetchCourses(uid, db)
+        }
+        
+    }, [role, uid, db])
 
     return (
         <div className='flex'>
@@ -23,23 +37,46 @@ const Dashboard = () => {
 
             <div className='p-4 w-full'>
                 <h1 className='font-bold text-3xl mb-24'>Dashboard</h1>
-                {/* <div className='grid md:grid-cols-2 lg:grid-cols-3 gap-3'>
-                    <GoalModal 
+                <div className='grid md:grid-cols-2 lg:grid-cols-3 gap-3'>
+                    {/* <CourseModal 
                         title='Software Engineering I'
-                        id='CEN 4010'
-                        term='Summer 2024'
+                        department='CEN'
+                        courseNumber='4010'
+                        term='Summer'
+                        year='2024'
+                        id='DoeCEN4010Summer2024'
                     />
-                    <GoalModal 
-                        title='Software Engineering I'
-                        id='CEN 4010'
-                        term='Summer 2024'
+                    <CourseModal 
+                        title='Software Engineering II'
+                        department='CEN'
+                        courseNumber='4020'
+                        term='Summer'
+                        year='2025'
+                        id='DoeCEN4020Summer2025'
                     />
-                    <GoalModal 
-                        title='Software Engineering I'
-                        id='CEN 4010'
-                        term='Summer 2024'
-                    />
-                </div> */}
+                    <CourseModal 
+                        title='Software Engineering III'
+                        department='CEN'
+                        courseNumber='4030'
+                        term='Summer'
+                        year='2026'
+                        id='DoeCEN4030Summer2026'
+                    /> */}
+
+                    {courses?.map((course) => {
+                        return (
+                            <CourseModal 
+                                title={course.title}
+                                department={course.department}
+                                courseNumber={course.courseNumber}
+                                term={course.term}
+                                year={course.year}
+                                id={course.courseID}
+                                key={course.courseID}
+                            />
+                        )
+                    })} 
+                </div>
                 
                 {!isLoadingUser
                     && (role === 'Teacher')

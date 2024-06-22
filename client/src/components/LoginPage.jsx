@@ -15,21 +15,21 @@ const LoginPage = () => {
 
     const handleLogIn = (email, password, auth) => {
         signIn(email, password, auth)
-            .then((response) => {
-                console.log('response = ', response);
-                setErrorMsg(response.message);
+        .then((response) => {
+            console.log('response = ', response);
 
-                if(response.status === 200) {
-                    navigate('/dashboard');
-                }
-                if(response.status === 400) {
-                    setShowError(true);
-        
-                    setTimeout(() => {
-                        setShowError(false);
-                    }, 3000)
-                }
-            })
+            if(response.status === 200) {
+                navigate('/dashboard');
+            }
+            if(response.status === 400) {
+                setErrorMsg(response.message);
+                setShowError(true);
+    
+                setTimeout(() => {
+                    setShowError(false);
+                }, 3000)
+            }
+        })
     }
 
     return(
