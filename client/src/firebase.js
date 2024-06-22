@@ -5,6 +5,7 @@ import { createUserWithEmailAndPassword,
     browserLocalPersistence
 } from "firebase/auth";
 import { query, getDocs, collection, where, addDoc } from "firebase/firestore";
+import { isAnyStringEmpty } from "./utils";
 
 const createUserInDB = async (uid, name, email, role, db) => {
     const q = query(collection(db, "users"), where("uid", "==", uid));
@@ -97,10 +98,73 @@ const getRole = async (uid, db) => {
     return role.charAt(0).toUpperCase() + role.slice(1);
 }
 
+const createNewCourse = async (title, department, courseNumber, term, year, courseID, instructor, uid, db) => {
+    console.log({
+        title, department, courseNumber, term, year, courseID
+    })
+
+    if(isAnyStringEmpty([title, department, courseNumber, term, year, courseID])) {
+        return {
+            "status": 400,
+            "message": "Missing required field(s)"
+        }
+    }
+    
+    const q = query(collection(db, "courses"), where("courseID", "==", courseID));
+    const docs = await getDocs(q);
+    if (docs.docs.length === 0) {
+        await addDoc(collection(db, "courses"), {
+            title,
+            department,
+            courseNumber,
+            term,
+            year,
+            courseID,
+            instructor,
+            uid
+        })
+
+        return {
+            "status": 200,
+            "message": "Course successfully created"
+        }
+    } else {
+        return {
+            "status": 400,
+            "message": "Course ID already in use"
+        }
+    }
+}
+
+const getCourses = async (uid, db) => {
+    let courses = [];
+    const q = query(collection(db, "courses"), where("uid", "==", uid));
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach((doc) =>{
+        courses.push(doc.data());
+    })
+
+    return courses;
+}
+
+const getCourseInfo = async (courseId, db) => {
+    let info;
+    const q = query(collection(db, "courses"), where("courseID", "==", courseId));
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach((doc) =>{
+        info = doc.data();
+    })
+  
+    return info;
+}
+
 export {
     signup,
     signIn,
     handleSignOut,
     getUserName,
-    getRole
+    getRole,
+    createNewCourse,
+    getCourses,
+    getCourseInfo
 }

@@ -11,6 +11,8 @@ import Syllabus from "./components/Syllabus";
 import CourseContent from "./components/CourseContent";
 import Gradebook from "./components/Gradebook";
 import NewCourse from "./components/NewCourse";
+import Welcome from "./components/Welcome";
+import Assignments from "./components/Assignments";
 
 const routes = [{
         'path': '/',
@@ -25,17 +27,23 @@ const routes = [{
         'path': '/dashboard',
         'element': <Dashboard />
     }, {
-        'path': '/syllabus',
-        'element': <Syllabus />
-    }, {
-        'path': '/content',
-        'element': <CourseContent />
-    }, {
-        'path': '/gradebook',
-        'element': <Gradebook />
-    }, {
         'path': '/support',
         'element': <Support />
+    }, {
+        'path': '/course/:courseId',
+        'element': <Welcome />
+    }, {
+        'path': '/course/:courseId/syllabus',
+        'element': <Syllabus />
+    }, {
+        'path': 'course/:courseId/content',
+        'element': <CourseContent />
+    }, {
+        'path': 'course/:courseId/assignments',
+        'element': <Assignments />
+    },{
+        'path': 'course/:courseId/gradebook',
+        'element': <Gradebook />
     }
 ]
 

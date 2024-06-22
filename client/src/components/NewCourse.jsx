@@ -1,6 +1,9 @@
 import { useState } from "react";
 import Sidebar from "./Sidebar";
 import ErrorMsg from "./ErrorMsg";
+import { createNewCourse } from "../firebase";
+import { useFirebaseConfig } from '../hooks/useFirebaseConfig';
+import useUserInfo from "../hooks/useUserInfo";
 
 const NewCourse = () => {
     const [title, setTitle] = useState('');
@@ -8,15 +11,18 @@ const NewCourse = () => {
     const [courseNumber, setCourseNumber] = useState('');
     const [term, setTerm] = useState('');
     const [year, setYear] = useState('');
+    const [courseId, setCourseId] = useState('');
     const [showError, setShowError] = useState(false);
     const [errorMsg, setErrorMsg] = useState('');
+    const { db } = useFirebaseConfig()
+    const { uid, name } = useUserInfo()
 
     const inputFields = [{
         'title': 'Title *',
         'value': title,
         'setState': (e) => {
-            const capitalizedTitle = e.target.value.replace(/(^\w|\s\w)(\S*)/g, (_,m1,m2) => m1.toUpperCase()+m2.toLowerCase())
-            setTitle(capitalizedTitle)
+            // const capitalizedTitle = e.target.value.replace(/(^\w|\s\w)(\S*)/g, (_,m1,m2) => m1.toUpperCase()+m2.toLowerCase())
+            setTitle(e.target.value)
         },
         'placeholder': 'Software Engineering I'
     }, {
@@ -44,30 +50,25 @@ const NewCourse = () => {
         'type': 'number',
         'setState': (e) => {setYear(e.target.value)},
         'placeholder': '2024'
+    }, {
+        'title': 'Course ID *',
+        'value': courseId,
+        'setState': (e) => {setCourseId(e.target.value)},
+        'placeholder': 'DoeCEN4010Summer2024'
     }]
     
-    const handleSubmit = () => {
-        console.log({
-            title,
-            department,
-            courseNumber,
-            term,
-            year
+    const handleSubmit = (title, department, courseNumber, term, year, courseID, instructor, uid, db) => {
+        createNewCourse(title, department, courseNumber, term, year, courseID, instructor, uid, db)
+        .then((response) => {
+            if(response.status === 400) {
+                setErrorMsg(response.message);
+                setShowError(true);
+    
+                setTimeout(() => {
+                    setShowError(false);
+                }, 3000)
+            }
         })
-
-        if(title === ''
-            || department === ''
-            || courseNumber === ''
-            || term === ''
-            || year === ''
-        ) {
-            setErrorMsg('Missing required field(s)')
-            setShowError(true);
-
-            setTimeout(() =>{
-                setShowError(false);
-            }, 3000)
-        }
     }
 
     return (
@@ -94,7 +95,7 @@ const NewCourse = () => {
                     <p className='text-sm italic my-2 text-center'>* denotes required field</p>
 
                     <button className='w-full mt-8 mb-2 p-2 rounded bg-green-500 text-slate-50 hover:bg-green-600 active:scale-[0.98]'
-                        onClick={() => {handleSubmit()}}
+                        onClick={() => {handleSubmit(title, department, courseNumber, term, year, courseId, name, uid, db)}}
                     >
                         Create Course
                     </button>

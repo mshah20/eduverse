@@ -4,6 +4,7 @@ import { HomeIcon,
     UserCircleIcon, 
     DocumentCheckIcon, 
     BookOpenIcon, 
+    CalendarDaysIcon,
     BookmarkIcon, 
     ArrowRightStartOnRectangleIcon 
 } from '@heroicons/react/20/solid';
@@ -13,12 +14,14 @@ import { useEffect } from 'react';
 import { useFirebaseConfig } from '../hooks/useFirebaseConfig';
 import { useUserInfo } from '../hooks/useUserInfo';
 
-const Sidebar = () => {
+const Sidebar = ({courseId}) => {
     const navigate = useNavigate();
     const { auth } = useFirebaseConfig();
     const { name, role } = useUserInfo();
+    let navLinks = [];
 
-    const navLinks = [{
+    if(courseId) {
+        navLinks = [{
         'navigate': '/dashboard',
         'title': 'Dashboard',
         'icon': (className) => {return <HomeIcon className={className} />}
@@ -27,18 +30,33 @@ const Sidebar = () => {
         'title': 'Support',
         'icon': (className) => {return <WrenchScrewdriverIcon className={className} />}
     }, {
-        'navigate': '/syllabus',
+        'navigate': `/course/${courseId}/syllabus`,
         'title': 'Syllabus',
         'icon': (className) => {return <BookmarkIcon className={className} />}
     }, {
-        'navigate': '/content',
+        'navigate': `/course/${courseId}/content`,
         'title': 'Course Content',
         'icon': (className) => {return <BookOpenIcon className={className} />}
+    },{
+        'navigate': `/course/${courseId}/assignments`,
+        'title': 'Assignments',
+        'icon': (className) => {return <CalendarDaysIcon className={className} />}
     }, {
-        'navigate': '/gradebook',
+        'navigate': `/course/${courseId}/gradebook`,
         'title': 'Gradebook',
         'icon': (className) => {return <DocumentCheckIcon className={className} />}
-    }]
+    }]}
+    else {
+        navLinks = [{
+            'navigate': '/dashboard',
+            'title': 'Dashboard',
+            'icon': (className) => {return <HomeIcon className={className} />}
+        }, {
+            'navigate': '/support',
+            'title': 'Support',
+            'icon': (className) => {return <WrenchScrewdriverIcon className={className} />}
+        }]
+    }
 
     const accountSignOut = (auth) => {
         handleSignOut(auth)

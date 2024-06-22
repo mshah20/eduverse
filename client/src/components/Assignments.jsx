@@ -1,7 +1,7 @@
 import Sidebar from "./Sidebar";
 import { useEffect, useState } from "react";
 
-const Syllabus = () => {
+const Assignments = () => {
     const [courseId, setCourseId] = useState('')
 
     useEffect(() => {        
@@ -16,4 +16,4 @@ const Syllabus = () => {
     );
 }
  
-export default Syllabus;
+export default Assignments;
