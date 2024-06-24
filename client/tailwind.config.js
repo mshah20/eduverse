@@ -13,6 +13,9 @@ module.exports = {
             },
             animation: {
                 fadeInOut: 'fadeInOut 3s linear forwards'
+            },
+            dropShadow: {
+                'md-blue': '0 4px 3px rgba(23, 37, 84, 0.5)'
             }
         },
     },

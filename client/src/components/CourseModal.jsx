@@ -4,7 +4,7 @@ const CourseModal = ({ title, department, courseNumber, term, year, id }) => {
     const navigate = useNavigate();
 
     return (
-        <div className='bg-slate-300 flex items-center justify-between px-4 py-3 mb-6 rounded drop-shadow-md cursor-pointer'
+        <div className='bg-blue-200 text-blue-950 flex items-center justify-between px-4 py-5 mb-6 rounded drop-shadow-md cursor-pointer ease-in-out duration-100 hover:drop-shadow-md-blue'
             onClick={() => {navigate(`/course/${id}`)}}
         >
             <div>
