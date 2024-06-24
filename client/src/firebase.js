@@ -4,7 +4,7 @@ import { createUserWithEmailAndPassword,
     setPersistence, 
     browserLocalPersistence
 } from "firebase/auth";
-import { query, getDocs, collection, where, addDoc } from "firebase/firestore";
+import { query, doc, updateDoc, getDocs, collection, where, addDoc, getDoc, arrayUnion } from "firebase/firestore";
 import { isAnyStringEmpty } from "./utils";
 
 const createUserInDB = async (uid, name, email, role, db) => {
@@ -136,7 +136,7 @@ const createNewCourse = async (title, department, courseNumber, term, year, cour
     }
 }
 
-const getCourses = async (uid, db) => {
+const getCoursesTeacher = async (uid, db) => {
     let courses = [];
     const q = query(collection(db, "courses"), where("uid", "==", uid));
     const querySnapshot = await getDocs(q);
@@ -147,15 +147,75 @@ const getCourses = async (uid, db) => {
     return courses;
 }
 
+const getCoursesStudent = async (uid, db) => {
+    let courses = [];
+    const q = query(collection(db, "courses"), where("students", "array-contains", uid));
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach((doc) =>{
+        courses.push(doc.data());
+    })
+
+    return courses;
+}
+
 const getCourseInfo = async (courseId, db) => {
     let info;
-    const q = query(collection(db, "courses"), where("courseID", "==", courseId));
+    const q = query(collection(db, "courses"), where("courseId", "==", courseId));
     const querySnapshot = await getDocs(q);
     querySnapshot.forEach((doc) =>{
         info = doc.data();
     })
   
     return info;
+}
+
+const getSyllabus = async (courseId, db) => {
+    let syllabus = '';
+    const docRef = doc(db, "courses", courseId);
+    const docSnap = await getDoc(docRef);
+
+    if(docSnap.exists()) {
+        syllabus = docSnap.data().syllabus;
+    }
+
+    return syllabus;
+}
+
+const updateSyllabus = async (courseId, html, db) => {
+    const docRef = doc(db, "courses", courseId);
+
+    await updateDoc(docRef, {
+        syllabus: html
+    })
+}
+
+const enrollInCourse = async (courseId, uid, db) => {
+    if(courseId === '' || courseId === null) {
+        return {
+            "status": 400,
+            "message": "Invalid Course ID"
+        }
+    }
+
+    const docRef = doc(db, "courses", courseId);
+    const docSnap = await getDoc(docRef);
+
+    if(docSnap.exists()) {
+        await updateDoc(docRef, {
+            students: arrayUnion(uid)
+        })
+
+        return {
+            "status": 200,
+            "message": "Enrolled successfully"
+        }
+    }
+    else {
+        return {
+            "status": 400,
+            "message": "Course with this ID doesn't exist"
+        }
+    }
 }
 
 export {
@@ -165,6 +225,10 @@ export {
     getUserName,
     getRole,
     createNewCourse,
-    getCourses,
-    getCourseInfo
+    getCoursesTeacher,
+    getCoursesStudent,
+    getCourseInfo,
+    getSyllabus,
+    updateSyllabus,
+    enrollInCourse
 }

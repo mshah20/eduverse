@@ -76,8 +76,8 @@ const NewCourse = () => {
             <Sidebar />
             {showError && <ErrorMsg message={errorMsg} />}
 
-            <div className='p-4 w-full'>
-                <h1 className='font-bold text-3xl mb-24'>Create a Course</h1>
+            <div className='p-4 w-full overflow-auto max-h-screen'>
+                <h1 className='font-bold text-3xl mb-8'>Create a Course</h1>
 
                 <div className='ml-6 w-[500px]'>
                     {inputFields.map((inputField) => (

@@ -82,7 +82,7 @@ const Sidebar = ({courseId}) => {
     }, [auth])
 
     return (
-        <div className='p-2 bg-blue-950 text-slate-50 min-h-screen min-w-fit md:min-w-64 flex flex-col items-center select-none'>
+        <div className='p-2 bg-blue-950 text-slate-50 h-screen min-w-fit md:min-w-64 flex flex-col items-center select-none'>
             <h1 className='font-serif text-5xl mt-6 mb-24 hidden md:block'>Eduverse</h1>
             <h1 className='font-serif text-5xl mt-6 mb-24 block md:hidden'>E</h1>
             
