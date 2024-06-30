@@ -9,9 +9,6 @@ const extensions = [
     openOnClick: false,
     autolink: true,
     defaultProtocol: 'https'
-  }),
-  Link.extend({
-    // inclusive: false
   })
 ]
 
@@ -216,7 +213,7 @@ const MenuBar = ({ editor }) => {
     )
 }
 
-const Tiptap = ({ onEditorContentSave, content, syllabus }) => {
+const Tiptap = ({ onEditorContentSave, content, input }) => {
     const editor = useEditor({
         extensions,
         content
@@ -232,10 +229,10 @@ const Tiptap = ({ onEditorContentSave, content, syllabus }) => {
             return;
         }
 
-        if(syllabus !== '') {
-            editor.commands.setContent(syllabus)
+        if(input !== '') {
+            editor.commands.setContent(input)
         }
-    }, [editor, syllabus])
+    }, [editor, input])
 
     return (
         <div className='flex flex-col bg-slate-100 rounded w-[80%] mx-auto p-6 drop-shadow'>

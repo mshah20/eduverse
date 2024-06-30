@@ -43,7 +43,9 @@ const Dashboard = () => {
     
                 setTimeout(() => {
                     setShowSuccess(false);
+                    window.location.reload()
                 }, 3000)
+
             }
             else if(response.status === 400) {
                 setShowError(true);
