@@ -4,7 +4,7 @@ import { createUserWithEmailAndPassword,
     setPersistence, 
     browserLocalPersistence
 } from "firebase/auth";
-import { query, doc, updateDoc, getDocs, collection, where, addDoc, getDoc, arrayUnion } from "firebase/firestore";
+import { query, doc, updateDoc, deleteDoc, getDocs, collection, where, addDoc, getDoc, arrayUnion, orderBy } from "firebase/firestore";
 import { isAnyStringEmpty } from "./utils";
 
 const createUserInDB = async (uid, name, email, role, db) => {
@@ -184,8 +184,18 @@ const getSyllabus = async (courseId, db) => {
 const updateSyllabus = async (courseId, html, db) => {
     const docRef = doc(db, "courses", courseId);
 
-    await updateDoc(docRef, {
+    return updateDoc(docRef, {
         syllabus: html
+    }).then(() => {
+        return {
+            'status': 200,
+            'message': 'Updated syllabus successfully'
+        }
+    }).catch(() => {
+        return { 
+            "status": 400,
+            "message": "Error updating syllabus"
+        }
     })
 }
 
@@ -218,6 +228,60 @@ const enrollInCourse = async (courseId, uid, db) => {
     }
 }
 
+const addModule = async (courseId, db, module) => {
+    return addDoc(collection(db, courseId), {
+        title: module.title,
+        content: module.content
+    }).then((docRef) => {
+        if(docRef.id !== null && docRef.id !== '') {
+            return {
+                "status": 200,
+                "message": "Module added successfully" 
+            }
+        } 
+        else {
+            return {
+                "status": 400,
+                "message": "Error adding module"
+            }
+        }
+    })
+}
+
+const getAllModules = async (courseId, db) => {
+    let allModules = [];
+    const q = query(collection(db, courseId), orderBy("title"));
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach((doc) => {
+        allModules.push(doc.data());
+    })
+  
+    return allModules;
+}
+
+const deleteModule = async (courseId, db, title) => {
+    const docs = [];
+    const q = query(collection(db, courseId),  where("title", "==", title))
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach((doc) => {
+        docs.push(doc);
+    })
+
+    return deleteDoc(docs[0].ref)
+    .then(() => {
+        return {
+            "status": 200,
+            "message": "Module deleted successfully"
+        }
+    })
+    .catch(() => {
+        return {
+            "status": 400,
+            "message": "Error deleting module"
+        }
+    })
+}
+
 export {
     signup,
     signIn,
@@ -230,5 +294,8 @@ export {
     getCourseInfo,
     getSyllabus,
     updateSyllabus,
-    enrollInCourse
+    enrollInCourse,
+    addModule,
+    getAllModules,
+    deleteModule
 }
