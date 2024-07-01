@@ -78,11 +78,8 @@ const Sidebar = ({courseId}) => {
             })
         }
 
-        console.log('UID = ', uid);
-        console.log("ROLE = ", role);
-
         // eslint-disable-next-line
-    }, [auth, uid, role])
+    }, [auth])
 
     return (
         <div className='p-2 bg-blue-950 text-slate-50 h-screen min-w-fit md:min-w-64 flex flex-col items-center select-none'>
