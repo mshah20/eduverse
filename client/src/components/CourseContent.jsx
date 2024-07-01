@@ -95,7 +95,7 @@ const CourseContent = () => {
             {showSuccess && <SuccessMsg message={responseMsg} />}
             {showError && <ErrorMsg message={responseMsg} />}
 
-            <div className='p-4 w-full'>
+            <div className='p-4 w-full overflow-auto max-h-screen'>
                 <h1 className='font-bold text-3xl mb-24'>Course Content</h1>
 
                 {modules?.map((module) => (
@@ -136,7 +136,7 @@ const CourseContent = () => {
                         className='bg-green-500 text-slate-50 px-4 py-3 mx-auto w-fit rounded flex items-center justify-center cursor-pointer hover:bg-green-600 active:scale-95'
                         onClick={() => setShowNewContentInput(true)}
                     >
-                        Add a new module
+                        Create New Module
                     </button>
                 )}
                 
