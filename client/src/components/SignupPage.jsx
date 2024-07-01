@@ -21,7 +21,7 @@ const SignupPage = () => {
         console.log('response = ', response);
 
         if(response.status === 200) {
-            navigate('/dashboard');
+            navigate('/');
         }
         else if(response.status === 400) {
             setShowError(true);

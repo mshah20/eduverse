@@ -229,7 +229,7 @@ const enrollInCourse = async (courseId, uid, db) => {
 }
 
 const addModule = async (courseId, db, module) => {
-    return addDoc(collection(db, courseId), {
+    return addDoc(collection(db, `${courseId}CourseContent`), {
         title: module.title,
         content: module.content
     }).then((docRef) => {
@@ -250,7 +250,7 @@ const addModule = async (courseId, db, module) => {
 
 const getAllModules = async (courseId, db) => {
     let allModules = [];
-    const q = query(collection(db, courseId), orderBy("title"));
+    const q = query(collection(db, `${courseId}CourseContent`), orderBy("title"));
     const querySnapshot = await getDocs(q);
     querySnapshot.forEach((doc) => {
         allModules.push(doc.data());
@@ -261,7 +261,7 @@ const getAllModules = async (courseId, db) => {
 
 const deleteModule = async (courseId, db, title) => {
     const docs = [];
-    const q = query(collection(db, courseId),  where("title", "==", title))
+    const q = query(collection(db, `${courseId}CourseContent`),  where("title", "==", title))
     const querySnapshot = await getDocs(q);
     querySnapshot.forEach((doc) => {
         docs.push(doc);
@@ -282,6 +282,60 @@ const deleteModule = async (courseId, db, title) => {
     })
 }
 
+const addAssignment = async (courseId, db, assignment) => {
+    return addDoc(collection(db, `${courseId}Assignments`), {
+        title: assignment.title,
+        content: assignment.content
+    }).then((docRef) => {
+        if(docRef.id !== null && docRef.id !== '') {
+            return {
+                "status": 200,
+                "message": "Assignment added successfully" 
+            }
+        } 
+        else {
+            return {
+                "status": 400,
+                "message": "Error adding assignment"
+            }
+        }
+    })
+}
+
+const getAllAssignments = async (courseId, db) => {
+    let allAssignments = [];
+    const q = query(collection(db, `${courseId}Assignments`), orderBy("title"));
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach((doc) => {
+        allAssignments.push(doc.data());
+    })
+  
+    return allAssignments;
+}
+
+const deleteAssignment = async (courseId, db, title) => {
+    const docs = [];
+    const q = query(collection(db, `${courseId}Assignments`),  where("title", "==", title))
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach((doc) => {
+        docs.push(doc);
+    })
+
+    return deleteDoc(docs[0].ref)
+    .then(() => {
+        return {
+            "status": 200,
+            "message": "Assignment deleted successfully"
+        }
+    })
+    .catch(() => {
+        return {
+            "status": 400,
+            "message": "Error deleting assignment"
+        }
+    })
+}
+
 export {
     signup,
     signIn,
@@ -297,5 +351,8 @@ export {
     enrollInCourse,
     addModule,
     getAllModules,
-    deleteModule
+    deleteModule,
+    addAssignment,
+    getAllAssignments,
+    deleteAssignment
 }

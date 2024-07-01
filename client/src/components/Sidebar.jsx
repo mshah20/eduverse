@@ -17,7 +17,7 @@ import { useUserInfo } from '../hooks/useUserInfo';
 const Sidebar = ({courseId}) => {
     const navigate = useNavigate();
     const { auth } = useFirebaseConfig();
-    const { name, role } = useUserInfo();
+    const { name, role, uid } = useUserInfo();
     let navLinks = [];
 
     if(courseId) {
@@ -78,8 +78,11 @@ const Sidebar = ({courseId}) => {
             })
         }
 
+        console.log('UID = ', uid);
+        console.log("ROLE = ", role);
+
         // eslint-disable-next-line
-    }, [auth])
+    }, [auth, uid, role])
 
     return (
         <div className='p-2 bg-blue-950 text-slate-50 h-screen min-w-fit md:min-w-64 flex flex-col items-center select-none'>

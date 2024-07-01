@@ -12,6 +12,10 @@ const Gradebook = () => {
     return (
         <div className='flex'>
             <Sidebar courseId={courseId} />
+
+            <div className='p-4 w-full overflow-auto max-h-screen'>
+                <h1 className='font-bold text-3xl mb-24'>Gradebook</h1>
+            </div>
         </div>
     );
 }

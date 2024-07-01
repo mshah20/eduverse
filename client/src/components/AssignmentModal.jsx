@@ -2,12 +2,12 @@ import { ChevronDownIcon, XMarkIcon } from "@heroicons/react/20/solid";
 import { useEffect, useState } from "react";
 import parse from 'html-react-parser';
 import useUserInfo from "../hooks/useUserInfo";
-import { deleteModule } from "../firebase";
+import { deleteAssignment } from "../firebase";
 import useFirebaseConfig from "../hooks/useFirebaseConfig";
 import SuccessMsg from "./SuccessMsg";
 import ErrorMsg from "./ErrorMsg";
 
-const ModuleModal = ({ title, content }) => {
+const AssignmentModal = ({ title, content }) => {
     const [courseId, setCourseId] = useState('')
     const [showModuleContent, setShowModuleContent] = useState(false)
     const { role } = useUserInfo();
@@ -16,8 +16,8 @@ const ModuleModal = ({ title, content }) => {
     const [showSuccess, setShowSuccess] = useState(false);
     const [showError, setShowError] = useState(false);
 
-    const handleModuleDeletion = (courseId, db, title) => {
-        deleteModule(courseId, db, title)
+    const handleAssignmentDeletion = (courseId, db, title) => {
+        deleteAssignment(courseId, db, title)
         .then((response) => {
             setResponseMsg(response.message);
 
@@ -64,7 +64,7 @@ const ModuleModal = ({ title, content }) => {
                             <button
                                 title='Delete Module'
                                 className='mr-4'
-                                onClick={() => {handleModuleDeletion(courseId, db, title)}}
+                                onClick={() => {handleAssignmentDeletion(courseId, db, title)}}
                             >
                                 <XMarkIcon className='size-6' />
                             </button>
@@ -84,4 +84,4 @@ const ModuleModal = ({ title, content }) => {
     );
 }
  
-export default ModuleModal;
+export default AssignmentModal;
