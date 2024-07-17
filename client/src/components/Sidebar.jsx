@@ -6,7 +6,8 @@ import { HomeIcon,
     BookOpenIcon, 
     CalendarDaysIcon,
     BookmarkIcon, 
-    ArrowRightStartOnRectangleIcon 
+    ArrowRightStartOnRectangleIcon, 
+    UserGroupIcon
 } from '@heroicons/react/20/solid';
 import { handleSignOut } from '../firebase';
 import { onAuthStateChanged } from 'firebase/auth';
@@ -16,8 +17,8 @@ import { useUserInfo } from '../hooks/useUserInfo';
 
 const Sidebar = ({courseId}) => {
     const navigate = useNavigate();
-    const { auth } = useFirebaseConfig();
-    const { name, role, uid } = useUserInfo();
+    const { auth } = useFirebaseConfig()
+    const { name, role } = useUserInfo()
     let navLinks = [];
 
     if(courseId) {
@@ -56,6 +57,14 @@ const Sidebar = ({courseId}) => {
             'title': 'Support',
             'icon': (className) => {return <WrenchScrewdriverIcon className={className} />}
         }]
+    }
+
+    if(role === 'Admin') {
+        navLinks.push({
+            'navigate': '/users',
+            'title': 'Users',
+            'icon': (className) => {return <UserGroupIcon className={className} />}
+        })
     }
 
     const accountSignOut = (auth) => {

@@ -129,7 +129,7 @@ const CourseContent = () => {
                     </div>
                 )}
 
-                {role === 'Teacher' 
+                {(role === 'Teacher' || role === 'Admin') 
                 && (!showNewContentInput)
                 && (
                     <button

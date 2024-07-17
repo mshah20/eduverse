@@ -63,11 +63,6 @@ const Assignments = () => {
         })
 
         setAssignmentTitle('')
-
-        console.log({
-            title: assignmentTitle,
-            content: html
-        });
     }
 
     const fetchAllAssignments = async (courseId, db) => {
@@ -128,7 +123,7 @@ const Assignments = () => {
                     </div>
                 )}
 
-                {role === 'Teacher' 
+                {(role === 'Teacher' || role === 'Admin') 
                 && (!showNewAssignmentInput)
                 && (
                     <button
