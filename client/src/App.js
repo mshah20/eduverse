@@ -14,6 +14,7 @@ import Gradebook from "./components/Gradebook";
 import NewCourse from "./components/NewCourse";
 import Welcome from "./components/Welcome";
 import Assignments from "./components/Assignments";
+import Users from './components/Users';
 
 const routes = [{
         'path': '/',
@@ -42,9 +43,12 @@ const routes = [{
     }, {
         'path': 'course/:courseId/assignments',
         'element': <Assignments />
-    },{
+    }, {
         'path': 'course/:courseId/gradebook',
         'element': <Gradebook />
+    }, {
+        'path': 'users',
+        'element': <Users />
     }
 ]
 

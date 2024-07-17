@@ -60,7 +60,7 @@ const AssignmentModal = ({ title, content }) => {
                         >
                             <ChevronDownIcon className='size-8' />
                         </button>
-                        {role === 'Teacher' && (
+                        {(role === 'Teacher' || role === 'Admin') && (
                             <button
                                 title='Delete Module'
                                 className='mr-4'

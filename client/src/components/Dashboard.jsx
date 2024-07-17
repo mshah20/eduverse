@@ -4,8 +4,8 @@ import CourseModal from "./CourseModal";
 import Sidebar from "./Sidebar";
 import { useEffect, useState } from 'react';
 import { useUserInfo } from '../hooks/useUserInfo';
-import useFirebaseConfig from '../hooks/useFirebaseConfig';
-import { getCoursesTeacher, getCoursesStudent, enrollInCourse } from '../firebase';
+import { useFirebaseConfig } from '../hooks/useFirebaseConfig';
+import { getCoursesTeacher, getCoursesStudent, enrollInCourse, getCoursesAdmin } from '../firebase';
 import ErrorMsg from './ErrorMsg';
 import SuccessMsg from './SuccessMsg';
 
@@ -30,6 +30,11 @@ const Dashboard = () => {
 
         if(role === 'Student') {
             const data = await getCoursesStudent(uid, db);
+            setCourses(data);
+        }
+
+        if(role === 'Admin') {
+            const data = await getCoursesAdmin(db);
             setCourses(data);
         }
     }
@@ -75,34 +80,9 @@ const Dashboard = () => {
             {showError && <ErrorMsg message={responseMsg} />}
             {showSuccess && <SuccessMsg message={responseMsg} />}
 
-            <div className='p-4 w-full'>
+            <div className='p-4 w-full overflow-auto max-h-screen'>
                 <h1 className='font-bold text-3xl mb-24'>Dashboard</h1>
                 <div className='grid md:grid-cols-2 lg:grid-cols-3 gap-3'>
-                    {/* <CourseModal 
-                        title='Software Engineering I'
-                        department='CEN'
-                        courseNumber='4010'
-                        term='Summer'
-                        year='2024'
-                        id='DoeCEN4010Summer2024'
-                    />
-                    <CourseModal 
-                        title='Software Engineering II'
-                        department='CEN'
-                        courseNumber='4020'
-                        term='Summer'
-                        year='2025'
-                        id='DoeCEN4020Summer2025'
-                    />
-                    <CourseModal 
-                        title='Software Engineering III'
-                        department='CEN'
-                        courseNumber='4030'
-                        term='Summer'
-                        year='2026'
-                        id='DoeCEN4030Summer2026'
-                    /> */}
-
                     {courses?.map((course) => {
                         return (
                             <CourseModal 

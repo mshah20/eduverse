@@ -1,9 +1,11 @@
 import { useState } from "react";
 import Sidebar from "./Sidebar";
+import SuccessMsg from "./SuccessMsg";
 import ErrorMsg from "./ErrorMsg";
 import { createNewCourse } from "../firebase";
 import { useFirebaseConfig } from '../hooks/useFirebaseConfig';
 import useUserInfo from "../hooks/useUserInfo";
+import { useNavigate } from 'react-router';
 
 const NewCourse = () => {
     const [title, setTitle] = useState('');
@@ -12,16 +14,17 @@ const NewCourse = () => {
     const [term, setTerm] = useState('');
     const [year, setYear] = useState('');
     const [courseId, setCourseId] = useState('');
+    const [responseMsg, setResponseMsg] = useState('');
+    const [showSuccess, setShowSuccess] = useState(false);
     const [showError, setShowError] = useState(false);
-    const [errorMsg, setErrorMsg] = useState('');
     const { db } = useFirebaseConfig()
     const { uid, name } = useUserInfo()
+    const navigate = useNavigate();
 
     const inputFields = [{
         'title': 'Title *',
         'value': title,
         'setState': (e) => {
-            // const capitalizedTitle = e.target.value.replace(/(^\w|\s\w)(\S*)/g, (_,m1,m2) => m1.toUpperCase()+m2.toLowerCase())
             setTitle(e.target.value)
         },
         'placeholder': 'Software Engineering I'
@@ -60,8 +63,17 @@ const NewCourse = () => {
     const handleSubmit = (title, department, courseNumber, term, year, courseID, instructor, uid, db) => {
         createNewCourse(title, department, courseNumber, term, year, courseID, instructor, uid, db)
         .then((response) => {
+            setResponseMsg(response.message);
+
+            if(response.status === 200) {
+               setShowSuccess(true);
+               
+               setTimeout(() => {
+                setShowSuccess(false);
+                navigate('/dashboard');
+            }, 3000)
+            }
             if(response.status === 400) {
-                setErrorMsg(response.message);
                 setShowError(true);
     
                 setTimeout(() => {
@@ -74,7 +86,9 @@ const NewCourse = () => {
     return (
         <div className='flex'>
             <Sidebar />
-            {showError && <ErrorMsg message={errorMsg} />}
+
+            {showSuccess && <SuccessMsg message={responseMsg} />}
+            {showError && <ErrorMsg message={responseMsg} />}
 
             <div className='p-4 w-full overflow-auto max-h-screen'>
                 <h1 className='font-bold text-3xl mb-8'>Create a Course</h1>

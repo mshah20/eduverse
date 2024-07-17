@@ -65,7 +65,7 @@ const Syllabus = () => {
                 <h1 className='font-bold text-3xl mb-8'>Syllabus</h1>
 
                 <div>
-                    {role === 'Teacher' ? 
+                    {(role === 'Teacher' || role === 'Admin') ? 
                         <Tiptap 
                             onEditorContentSave={handleEditorSave}
                             input={syllabus}
