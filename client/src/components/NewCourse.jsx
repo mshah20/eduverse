@@ -93,7 +93,7 @@ const NewCourse = () => {
             <div className='p-4 w-full overflow-auto max-h-screen'>
                 <h1 className='font-bold text-3xl mb-8'>Create a Course</h1>
 
-                <div className='ml-6 w-[500px]'>
+                <div className='ml-6 w-[500px] max-w-[80%]'>
                     {inputFields.map((inputField) => (
                         <div key={inputField.title}>
                             <p className='my-2 font-bold'>{inputField.title}</p>

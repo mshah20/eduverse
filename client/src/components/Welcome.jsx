@@ -52,7 +52,7 @@ const Welcome = () => {
         <div className='flex'>
             <Sidebar courseId={courseId}/>
             
-            <div className='p-4 w-full flex flex-col items-center'>
+            <div className='p-4 w-full flex flex-col items-center overflow-auto max-h-screen'>
                 <div className='text-center mt-16'>
                     <h1 className='text-5xl font-serif'>Welcome to {courseTitle}</h1>
                     <h2 className='italic'>taught by {instructor}</h2>

@@ -220,7 +220,9 @@ const getSyllabus = async (courseId, db) => {
     const docSnap = await getDoc(docRef);
 
     if(docSnap.exists()) {
-        syllabus = docSnap.data().syllabus;
+        if(docSnap.data().syllabus) {
+            syllabus = docSnap.data().syllabus;
+        }        
     }
 
     return syllabus;
