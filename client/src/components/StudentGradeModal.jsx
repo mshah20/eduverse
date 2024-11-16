@@ -84,7 +84,7 @@ const StudentGradeModel = ({ name, uid }) => {
 
                     <div className='font-bold flex justify-between p-4'>
                         <p>Total</p>
-                        <p className={role === 'Student' ? 'mr-[70px]' : 'mr-40'}>{totalGrade}</p>
+                        <p className={role === 'Student' ? 'mr-[70px]' : 'mr-40'}>{totalGrade.toFixed(2)}</p>
                     </div>
                 </div>
             )}
